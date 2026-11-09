@@ -1,40 +1,39 @@
 package uk.ac.westminster.product_api;
 
-public class Product {
+public abstract class Product {
     private Long id;
     private String name;
     private double price;
 
-    // No-arg constructor required for deserialization
     public Product() {}
 
-    // Parameterized constructor
     public Product(Long id, String name, double price) {
         this.id = id;
         this.name = name;
         this.price = price;
     }
 
-    // Getters
+    // Abstract method: no body, subclasses MUST implement this[cite: 23, 31]
+    public abstract String getSummary();
+
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
         return name;
     }
 
-    public double getPrice() {
-        return price;
-    }
-
-    // Setters
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public void setName(String name) {
         this.name = name;
+    }
+
+    public double getPrice() {
+        return price;
     }
 
     public void setPrice(double price) {

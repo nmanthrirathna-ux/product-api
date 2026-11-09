@@ -1,37 +1,46 @@
 package uk.ac.westminster.product_api;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
+@RequestMapping("/products")
 public class ProductController {
 
-    @Autowired
-    private ProductService productService;
+    private final ProductService productService;
 
-    @GetMapping("/products")
+    public ProductController(ProductService productService) {
+        this.productService = productService;
+    }
+
+    @GetMapping
     public List<Product> getAllProducts() {
         return productService.getAllProducts();
     }
 
-    @GetMapping("/products/{id}")
-    public Product getProductById(@PathVariable Long id) {
-        return productService.getProductById(id).orElse(null);
-    }
-
-    @PostMapping("/products")
-    public Product addProduct(@RequestBody Product product) {
+    @PostMapping
+    public Product addProduct(@RequestBody DigitalProduct product) {
+        // Temporary fix: Abstract Product cannot be instantiated directly via JSON request[cite: 23]
         return productService.addProduct(product);
     }
 
-    @DeleteMapping("/products/{id}")
+    @GetMapping("/{id}")
+    public Optional<Product> getProductById(@PathVariable Long id) {
+        return productService.getProductById(id);
+    }
+
+    @DeleteMapping("/{id}")
     public void deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
     }
 
-    @GetMapping("/products/search")
-    public List<Product> search(@RequestParam String name) {
+    @GetMapping("/search")
+    public List<Product> searchProducts(@RequestParam String name) {
         return productService.findByName(name);
+    }
+    @GetMapping("/products/summaries")
+    public List<String> getSummaries() {
+        return productService.getAllSummaries();
     }
 }

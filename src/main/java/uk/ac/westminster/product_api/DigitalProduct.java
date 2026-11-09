@@ -1,21 +1,35 @@
 package uk.ac.westminster.product_api;
 
-public class DigitalProduct extends Product {
+public class DigitalProduct extends Product implements Discountable {
     private String downloadUrl;
     private double fileSizeMB;
+    private double discountedPrice;
 
-    // No-arg constructor required for Jackson JSON deserialization
     public DigitalProduct() {}
 
-    // Full parameterized constructor
     public DigitalProduct(Long id, String name, double price, String downloadUrl, double fileSizeMB) {
-        // super(...) MUST be the very first statement
         super(id, name, price);
         this.downloadUrl = downloadUrl;
         this.fileSizeMB = fileSizeMB;
+        this.discountedPrice = price; // Initial price before discount
     }
 
-    // Getters for the new fields
+    @Override
+    public String getSummary() {
+        return "Digital: " + getName() + " | Download: " + downloadUrl;
+    }
+
+    @Override
+    public void applyDiscount(double rate) {
+        // Nothing is shipped, so the full rate applies
+        this.discountedPrice = getPrice() * (1 - rate);
+    }
+
+    @Override
+    public double getDiscountedPrice() {
+        return discountedPrice;
+    }
+
     public String getDownloadUrl() {
         return downloadUrl;
     }
